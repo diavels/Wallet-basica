@@ -6,8 +6,24 @@ si son incorrectas */
 //credenciales
 const username = "fabian";
 const password = "admin";
+const boton = document.getElementById('check');
+let mail = document.getElementById('mail');
+let pass = document.getElementById('pass');
 
-le
+//funcion del btn mostrar contraseña
+document.getElementById('check').addEventListener('click', function() {
+    alert('mostrar contraseña');
+})
+
+//validacion de credenciales
+document.getElementById('login').addEventListener('click',function validar(mail, pass){
+    if(mail === username && pass === password) {
+       alert('ingresaste') 
+    }else {
+        alert('no ingresaste')
+    }
+})
+
 
 //logica de menu principal
 
