@@ -12,7 +12,11 @@ let pass = document.getElementById('pass');
 
 //funcion del btn mostrar contraseña
 document.getElementById('check').addEventListener('click', function() {
-    alert('mostrar contraseña');
+    if(pass.type === "password") {
+        pass.typw = "text";
+    }else {
+        pass.type = "password";
+    }
 })
 
 //validacion de credenciales
@@ -48,4 +52,5 @@ al hacer click, debe aparecer una leyenda diciendo:
 
 /* 
 - mostrar lista de movimientos realizados, con los detalles
+
  */
