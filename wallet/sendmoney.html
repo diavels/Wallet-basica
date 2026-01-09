@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <title>Menu Principal</title>
+</head>
+
+<body>
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/menu.html">
+        <img src="/img/logo.png" alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+        Alek Wallet</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mb-2 mb-lg-0 mx-auto">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="/menu.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/deposit.html">Depositar</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/sendmoney.html">Enviar dinero</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/transactions.html">Transacciones</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container">
+    <h2>Enviar Dinero</h2>
+    <form>
+      <div class="form-group">
+        <label for="searchContact">Buscar en la agenda de transferencias:</label>
+        <input type="text" class="form-control" id="searchContact" placeholder="Buscar Contactos">
+      </div>
+      <button type="submit" class="btn btn-primary">Agregar nuevo contacto</button>
+      <h3>Contactos</h3>
+      <ul id="contactList" class="list-group">
+        <li class="list-group-item">
+          <div class="contact-info">
+            <span class="contact-name">Jonny Bravo</span>
+            <span class="contact-details">Rut: 14.568.699-9, Alias: Jonny Bravo, Banco: Banco Estado</span>
+          </div>
+        </li>
+        <li class="list-group-item">
+          <div class="contact-info">
+            <span class="contact-name">Juana Maria</span>
+            <span class="contact-details">Rut: 5.569.568-8, Alias: Juanita Mari, Banco: Banco de Chile</span>
+          </div>
+        </li>
+        <button type="submit" class="btn btn-primary w-25 m-1 text-center">Enviar dinero</button>
+    </form>
+    <a href="menu.html" class="btn btn-secondary w-25 m-1 text-center">Volver al Menú Principal</a>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+    crossorigin="anonymous"></script>
+
+</body>
+
+</html>
