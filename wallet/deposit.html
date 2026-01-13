@@ -39,16 +39,23 @@
     </div>
   </nav>
   
-  <div class="container">
-    <h2>Depositar</h2>
+  <div class="container d-flex justify-content-center mt-5">
+  <div class="card shadow-sm p-4" style="width: 100%; max-width: 500px; border-radius: 15px;">
+    <h2 class="text-center mb-4">Depositar Fondos</h2>
     <form id="form">
-      <div class="form-group ">
-        <label for="depositAmount">Monto a depositar:</label>
-        <input id="inDinero" type="number" class="form-control w-50" id="depositAmount" placeholder="Ingresa un monto">
+      <div class="mb-3">
+        <label for="inDinero" class="form-label text-muted">¿Cuánto deseas ingresar?</label>
+        <div class="input-group input-group-lg">
+          <span class="input-group-text">$</span>
+          <input id="inDinero" type="number" class="form-control" placeholder="0.00" required>
+        </div>
       </div>
-      <button id="guardarDinero" type="submit" class="btn btn-primary m-1">Realizar depósito</button>
+      <button id="guardarDinero" type="submit" class="btn btn-primary w-100 py-2 fw-bold">
+        Confirmar Depósito
+      </button>
     </form>
   </div>
+</div>
 
     <!--Modal-->
 <div  class="modal fade" id="modalRedireccion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">

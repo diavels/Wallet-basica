@@ -82,4 +82,3 @@ function mostrarSaldo() {
 }
 //sive para que el codigo se active dsp de que el dom este listo.
 document.addEventListener('DOMContentLoaded', mostrarSaldo);
-
