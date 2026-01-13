@@ -4,41 +4,37 @@
 si son incorrectas */
 
 //credenciales
-const username = "fabian";
+const username = "fabian@gmail.com";
 const password = "admin";
 const boton = document.getElementById('check');
-let mail = document.getElementById('mail');
-let pass = document.getElementById('pass');
+const mailInput = document.getElementById('mail');
+const passInput = document.getElementById('pass');
 
 //funcion del btn mostrar contraseña
-document.getElementById('check').addEventListener('click', function() {
-    if(pass.type === "password") {
-        pass.typw = "text";
+boton.addEventListener('click', function() {
+   
+    if(passInput.type === "password") {
+        passInput.type = "text";
     }else {
-        pass.type = "password";
+        passInput.type = "password";
     }
-})
+});
 
 //validacion de credenciales
-document.getElementById('login').addEventListener('click',function validar(mail, pass){
-    if(mail === username && pass === password) {
-       alert('ingresaste') 
+document.getElementById('login').addEventListener('click', function validar(event){
+    //detiene la recarga de pagina que provoca el input submit
+    event.preventDefault();
+    //busca capturar la informacion al hacer el click
+    const mailValue = mailInput.value;
+    const passValue = passInput.value;
+   
+    if(mailValue === username && passValue === password) {
+       window.location.replace('menu.html');
     }else {
         alert('no ingresaste')
+        passInput.value = "";
     }
-})
-
-
-//logica de menu principal
-
-/*agregar evento a los botones principales, 
-al hacer click, debe aparecer una leyenda diciendo:
-"redirigiendo a x" */
-
-//logica de deposito
-
-/* agregar evento al btn realizar deposito
-- actualizar el saldo con el monto depositado */
+});
 
 //logica de enviar dinero
 

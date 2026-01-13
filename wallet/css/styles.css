@@ -1,7 +1,8 @@
-body .index{
+body .index {
     padding: 20px;
 }
-.container{
+
+.container {
     max-width: 400px;
     margin: 0 auto;
 }

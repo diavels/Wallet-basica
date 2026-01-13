@@ -24,16 +24,16 @@
       <div class="collapse navbar-collapse " id="navbarSupportedContent">
         <ul class="navbar-nav mb-2 mb-lg-0 mx-auto">
           <li class="nav-item ">
-            <a class="nav-link active" aria-current="page" href="/menu.html">Home</a>
+            <a class="nav-link active" aria-current="page" href="/menu.html" id="home">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/deposit.html">Depositar</a>
+            <a class="nav-link" href="/deposit.html" id="deposit">Depositar</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/sendmoney.html">Enviar dinero</a>
+            <a class="nav-link" href="/sendmoney.html" id="sendmoney">Enviar dinero</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/transactions.html">Transacciones</a>
+            <a class="nav-link" href="/transactions.html" id="transactions">Transacciones</a>
           </li>
         </ul>
       </div>
@@ -42,13 +42,27 @@
 
   <div class="container bg-body-secondary ">
     <h3>Saldo Disponible</h3>
-    <h4>$45.000</h4>
+    <h4 id="saldo">$45.000</h4>
   </div>
 
+  <!--Modal-->
+<div  class="modal fade" id="modalRedireccion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content text-center p-4">
+      <div class="modal-body">
+        <div class="spinner-border text-primary mb-3" role="status"></div>
+        <h4 id="redirigiendo" class="fw-bold">Redirigiendo...</h4>
+        <p class="text-muted">Espera un momento, por favor.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+  
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
     crossorigin="anonymous"></script>
-
+    <script src="/js/menu.js"></script>
 </body>
 
 </html>
