@@ -38,9 +38,6 @@
       </div>
     </div>
   </nav>
-  <!--formulario para agregar gente-->
-
-
 
   <!--formulario para elegir un contacto-->
   <div class="container">
@@ -56,7 +53,7 @@
           <i class="bi bi-person-plus-fill me-2"></i>Nuevo Contacto
         </button>
       </div>
-
+      <!--formulario para agregar gente-->
       <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasContacto" aria-labelledby="offcanvasLabel">
         <div class="offcanvas-header bg-primary text-white">
           <h5 class="offcanvas-title fw-bold" id="offcanvasLabel">Agregar a Alek Wallet</h5>
@@ -65,7 +62,7 @@
         </div>
         <div class="offcanvas-body">
           <p class="text-muted">Guarda los datos de tus amigos para enviarles dinero más rápido.</p>
-
+<!--inicio de formulario-->
           <form id="formNuevoContacto">
             <div class="mb-3">
               <label class="form-label fw-semibold">Nombre Completo</label>
@@ -81,14 +78,15 @@
               <label class="form-label fw-semibold">Alias (Opcional)</label>
               <input type="text" id="aliasContacto" class="form-control" placeholder="Ej: Mi hermano">
             </div>
-
-            <button type="submit" class="btn btn-primary w-100 py-2 shadow">
+<!--fin formulario-->
+            <button id="subContacto" type="submit" class="btn btn-primary w-100 py-2 shadow">
               Guardar Contacto
             </button>
           </form>
         </div>
       </div>
     </form>
+    <!--lista de contactos-->
     <div class="container mt-5 px-4">
       <div class="row mb-4 text-center">
         <div class="col-12">
@@ -106,7 +104,7 @@
 
 
 
-<!--modal que realiza la redireccion-->
+  <!--modal que realiza la redireccion-->
   <div class="modal fade" id="modalRedireccion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
