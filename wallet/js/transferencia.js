@@ -8,6 +8,8 @@
 //logica para agregar los contactos nuevos
 
 const inputContacto = document.getElementById('nombreContacto');
+const inpuntRut = document.getElementById ('rutContacto')
+const inputBanco = document.getElementById ('nombreBanco')
 const inputMail = document.getElementById('idContacto');
 const inputAlias = document.getElementById('aliasContacto');
 const btnSave = document.getElementById('subContacto');
@@ -17,6 +19,8 @@ btnSave.addEventListener('click', function (e) {
 
     const nuevoContacto = {
         nombre: inputContacto.value,
+        rut: inpuntRut.value,
+        banco: inputBanco.value,
         mail: inputMail.value,
         alias: inputAlias.value,
     };
@@ -28,82 +32,125 @@ btnSave.addEventListener('click', function (e) {
     localStorage.setItem('contactosGuardados', JSON.stringify(contactos));
 
     inputContacto.value = '';
+    inpuntRut.value = '';
+    inputBanco.value = '';
     inputMail.value = '';
     inputAlias.value = '';
 
     // 7. Actualizar la lista en pantalla inmediatamente
+    mostrarContactos();
+
+    
 });
 //logica para mostrar los contactos nuevos
 function mostrarContactos() {
     const listaContenedor = document.getElementById('listaContactos');
     const contactos = JSON.parse(localStorage.getItem('contactosGuardados')) || [];
 
-    // Limpiamos el contenedor para no duplicar datos
     listaContenedor.innerHTML = '';
+
+    if (contactos.length === 0) {
+        listaContenedor.innerHTML = '<p class="text-center text-muted p-4">Aún no tienes contactos guardados.</p>';
+        return;
+    }
 
     contactos.forEach(contacto => {
         const inicial = contacto.nombre.charAt(0).toUpperCase();
         
-        // Creamos el diseño estilizado con Bootstrap
-        listaContenedor.innerHTML += `
-            <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-                <div class="card contacto-card shadow-sm w-100 p-3 mb-3 text-center" style="border-radius: 15px; cursor: pointer;">
-                    <div class="card-body">
-                        <div class="rounded-circle bg-primary text-white mx-auto d-flex align-items-center justify-content-center mb-3" style="width: 50px; height: 50px; font-size: 1.2rem;">
-                            ${inicial}
-                        </div>
-                        <h5 class="fw-bold mb-0">${contacto.nombre}</h5>
-                        <small class="text-muted d-block mb-2">${contacto.mail}</small>
-                        ${contacto.alias ? `<span class="badge bg-info-subtle text-info rounded-pill">${contacto.alias}</span>` : ''}
-                    </div>
+        // Crear el elemento manualmente para asignar el evento click de forma segura
+        const label = document.createElement('label');
+        label.className = "list-group-item d-flex align-items-center justify-content-between p-3";
+        label.style.cursor = "pointer";
+        
+        label.innerHTML = `
+            <div class="d-flex align-items-center">
+                <div class="form-check me-3">
+                    <input class="form-check-input" type="radio" name="contactoParaTransferir">
+                </div>
+                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3 border" style="width: 40px; height: 40px; font-weight: bold; color: #0d6efd;">
+                    ${inicial}
+                </div>
+                <div>
+                    <h6 class="mb-0 fw-bold">${contacto.nombre}</h6>
+                    <small class="text-muted">${contacto.alias || contacto.mail}</small>
                 </div>
             </div>
+            <i class="bi bi-chevron-right text-secondary small"></i>
         `;
+
+        // AL HACER CLIC: Se prepara el modal con ESTE contacto
+        label.onclick = () => {
+            prepararTransferencia(contacto);
+            const modalTransf = new bootstrap.Modal(document.getElementById('modalTransf'));
+            modalTransf.show();
+        };
+
+        listaContenedor.appendChild(label);
     });
 }
-// Llamamos a mostrarContactos al cargar la página para ver los que ya existen
-document.addEventListener('DOMContentLoaded', mostrarContactos);
-
-
 
 //logica de enviar dinero
-/*
-btnGuardar.addEventListener('click', function (event) {
-    event.preventDefault();
 
-    //valores sean numericos y no se comporten como text
-    const monto = parseFloat(input.value);
+// Función para abrir el modal con los datos del contacto seleccionado
+function prepararTransferencia(contacto) {
+    // Rellenamos el modal con los datos del objeto 'contacto'
+    document.getElementById('infoNombre').value = contacto.nombre;
+    document.getElementById('infoRut').value = contacto.rut || 'No registrado';
+    document.getElementById('infoBanco').value = contacto.banco || 'No registrado';
+}
 
-    if (monto <= 0) {
-        alert("monto no valido para transaccion");
+document.getElementById('btnConfirmarTransf').addEventListener('click', function() {
+    const montoInput = document.getElementById('montoTransferir');
+    const monto = parseFloat(montoInput.value);
+    
+    let walletData = JSON.parse(localStorage.getItem('alekWalletData')) || { saldo: 0, movimientos: [] };
+    const errorMsg = document.getElementById('errorMonto');
+
+    // Validaciones
+    if (isNaN(monto) || monto <= 0) {
+        alert("Ingresa un monto válido");
         return;
     }
-    // 2. Obtener datos actuales de localStorage o crear nuevos si no existen
-    let datos = JSON.parse(localStorage.getItem('alekWalletData')) || {
-        saldo: 0,
-        movimientos: []
-    };
 
-    // 3. Actualizar el saldo y el historial
-    datos.saldo += monto;
+    if (monto > walletData.saldo) {
+        errorMsg.classList.remove('d-none');
+        montoInput.classList.add('is-invalid');
+        return;
+    }
 
-    const nuevoMovimiento = {
-        tipo: 'Depósito',
+    // Ejecutar Transacción
+    walletData.saldo -= monto;
+    walletData.movimientos.push({
+        tipo: 'Transferencia Enviada',
+        destinatario: document.getElementById('infoNombre').value,
         monto: monto,
-        fecha: new Date().toLocaleString(),
-        id: Date.now() // ID único para control
-    };
+        fecha: new Date().toLocaleString()
+    });
 
-    //funcio nde agregar el valor a json
-    datos.movimientos.push(nuevoMovimiento);
+    localStorage.setItem('alekWalletData', JSON.stringify(walletData));
 
-    // 4. Guardar de nuevo en localStorage
-    localStorage.setItem('alekWalletData', JSON.stringify(datos));
+    // Feedback visual (Cerrar modal actual y mostrar el de redirección/éxito)
+    bootstrap.Modal.getInstance(document.getElementById('modalTransf')).hide();
+    
+    const modalRedir = new bootstrap.Modal(document.getElementById('modalRedireccion'));
+    modalRedir.show();
 
-    // 5. Feedback visual (Opcional: usar el modal que tienes en tu HTML)
-    console.log("Transferencia exitosa:", nuevoMovimiento);
-    alert(`¡Envio de dinero realizado! Tu nuevo saldo es: $${datos.saldo}`);
+    // Simular redirección al Home después de 2 segundos
+    setTimeout(() => {
+        window.location.href = '/menu.html';
+    }, 2000);
+});
 
-    // Limpiar el input
-    inputMonto.value = '';
-});*/
+//muestra los contactos
+document.addEventListener('DOMContentLoaded', mostrarContactos);
+
+// Detectar cuando cualquier modal de la página se oculta
+document.addEventListener('hidden.bs.modal', function () {
+    // Elimina manualmente los backdrops sobrantes
+    const backdrops = document.querySelectorAll('.modal-backdrop');
+    backdrops.forEach(b => b.remove());
+
+    // Devuelve el scroll al cuerpo de la página
+    document.body.style.overflow = 'auto';
+    document.body.classList.remove('modal-open');
+});

@@ -62,11 +62,21 @@
         </div>
         <div class="offcanvas-body">
           <p class="text-muted">Guarda los datos de tus amigos para enviarles dinero más rápido.</p>
-<!--inicio de formulario-->
+          <!--inicio de formulario-->
           <form id="formNuevoContacto">
             <div class="mb-3">
               <label class="form-label fw-semibold">Nombre Completo</label>
               <input type="text" id="nombreContacto" class="form-control" placeholder="Ej: Juan Pérez" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Rut</label>
+              <input type="text" id="rutContacto" class="form-control" placeholder="Ej: Juan Pérez" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Banco Destinatario</label>
+              <input type="text" id="nombreBanco" class="form-control" placeholder="Ej: Juan Pérez" required>
             </div>
 
             <div class="mb-3">
@@ -78,7 +88,7 @@
               <label class="form-label fw-semibold">Alias (Opcional)</label>
               <input type="text" id="aliasContacto" class="form-control" placeholder="Ej: Mi hermano">
             </div>
-<!--fin formulario-->
+            <!--fin formulario-->
             <button id="subContacto" type="submit" class="btn btn-primary w-100 py-2 shadow">
               Guardar Contacto
             </button>
@@ -95,35 +105,79 @@
           <hr class="w-25 mx-auto border-primary border-2 opacity-75">
         </div>
       </div>
-
       <div id="listaContactos" class="row g-4 justify-content-center">
       </div>
     </div>
   </div>
   <!-- generamos un nuevo modal que pida el monto -->
+  <!--Boton para activar modal-->
 
+    <!--Cuerpo del modal-->
 
+    <div class="modal fade" id="modalTransf" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg">
+          <div class="modal-header bg-dark text-white">
+            <h5 class="modal-title fw-bold">Confirmar Transferencia</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label small text-muted fw-bold">DESTINATARIO</label>
+              <input type="text" id="infoNombre" class="form-control bg-light border-0" readonly>
+            </div>
 
-  <!--modal que realiza la redireccion-->
-  <div class="modal fade" id="modalRedireccion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content text-center p-4">
-        <div class="modal-body">
-          <div class="spinner-border text-primary mb-3" role="status"></div>
-          <h4 id="redirigiendo" class="fw-bold">Redirigiendo...</h4>
-          <p class="text-muted">Espera un momento, por favor.</p>
+            <div class="row mb-3">
+              <div class="col-6">
+                <label class="form-label small text-muted fw-bold">RUT</label>
+                <input type="text" id="infoRut" class="form-control bg-light border-0" readonly>
+              </div>
+              <div class="col-6">
+                <label class="form-label small text-muted fw-bold">BANCO</label>
+                <input type="text" id="infoBanco" class="form-control bg-light border-0" readonly>
+              </div>
+            </div>
+            <hr class="my-4">
+
+            <div class="mb-3">
+              <label for="montoTransferir" class="form-label fw-bold text-primary">MONTO A TRANSFERIR</label>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text bg-white border-primary text-primary">$</span>
+                <input type="number" id="montoTransferir" class="form-control border-primary" placeholder="0">
+              </div>
+              <div id="errorMonto" class="text-danger small mt-1 d-none">Saldo insuficiente</div>
+            </div>
+          </div>
+          <div class="modal-footer border-0">
+            <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" id="btnConfirmarTransf" class="btn btn-primary px-4 fw-bold">Realizar
+              transferencia</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
 
 
-  <script src="/js/menu.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"></script>
-  <script src="/js/transferencia.js"></script>
+    <!--modal que realiza la redireccion-->
+    <div class="modal fade" id="modalRedireccion" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+      aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content text-center p-4">
+          <div class="modal-body">
+            <div class="spinner-border text-primary mb-3" role="status"></div>
+            <h4 id="redirigiendo" class="fw-bold">Redirigiendo...</h4>
+            <p class="text-muted">Espera un momento, por favor.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <script src="/js/menu.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+      crossorigin="anonymous"></script>
+    <script src="/js/transferencia.js"></script>
 </body>
 
 </html>
