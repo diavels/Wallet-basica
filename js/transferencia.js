@@ -147,7 +147,7 @@ $(document).ready(function () {
     $('#btnConfirmarTransf').on('click', function () {
         const montoInput = $('#montoTransferir');
         const monto = parseFloat(montoInput.val());
-        const nombreDestinatario = $('#infoNombre').val(); // Capturamos el nombre
+        const nombreDestinatario = $('#infoNombre').val(); 
 
         let walletData = JSON.parse(localStorage.getItem('alekWalletData')) || { saldo: 0, movimientos: [] };
 
@@ -187,7 +187,7 @@ $(document).ready(function () {
 
     });
 
-    // 6. LIMPIEZA GLOBAL (Punto 5 del usuario)
+    // 6. LIMPIEZA GLOBAL
     $(document).on('hidden.bs.modal', function () {
         $('.modal-backdrop').remove();
         $('body').css('overflow', 'auto').removeClass('modal-open');

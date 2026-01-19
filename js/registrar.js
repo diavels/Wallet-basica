@@ -1,8 +1,7 @@
 $(document).ready(function () {
     $('#registroForm').on('submit', function (e) {
-        e.preventDefault(); // Evita que la página se recargue
+        e.preventDefault();
 
-        // Capturar los valores con jQuery
         const usuario = {
             nombre: $('#nombre').val(),
             rut: $('#rut').val(),
@@ -12,19 +11,23 @@ $(document).ready(function () {
             password: $('#password').val()
         };
 
-        // Lógica de LocalStorage (esta parte se mantiene similar ya que es API nativa)
+        // Guardar en LocalStorage
         let usuariosPrevios = JSON.parse(localStorage.getItem('usuarios')) || [];
         usuariosPrevios.push(usuario);
-        
         localStorage.setItem('usuarios', JSON.stringify(usuariosPrevios));
 
-        alert('Usuario registrado con éxito en LocalStorage');
-
-        window.location.href = 'login.html'; // Cambia esto por el nombre de tu archivo
-
-        // Limpiar el formulario
-        // Nota: .reset() es un método de JS puro, por eso usamos [0] para obtener el elemento DOM
-        this.reset(); 
+        // --- Lógica del Modal ---
+        // 1. Instanciar el modal de Bootstrap
+        const myModal = new bootstrap.Modal(document.getElementById('successModal'));
         
+        // 2. Mostrar el modal
+        myModal.show();
+
+        // 3. Redirigir a login
+        setTimeout(function() {
+            window.location.href = 'login.html';
+        }, 2500);
+
+        this.reset(); 
     });
 });

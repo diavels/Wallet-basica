@@ -40,14 +40,14 @@ $(document).ready(function () {
         // 4. Guardar en localStorage
         localStorage.setItem('alekWalletData', JSON.stringify(datos));
 
-        // Feedback visual usando .text() de jQuery
+        // Feedback visual
         $('#mensajeModal').text(`Depósito de $${monto.toLocaleString()} realizado correctamente.`);
         $('#nuevoSaldoModal').text(`Tu nuevo saldo es: $${datos.saldo.toLocaleString()}`);
 
         // Mostrar Modal
         modal.show();
 
-        // Limpiar el input con jQuery
+        // Limpiar el input
         input.val('');
     });
 });

@@ -1,49 +1,56 @@
 //logica del login
 $(document).ready(function () {
-    /* validar credenciales - mostrar mensaje alert
-si son incorrectas */
-    //credenciales
-    const username = "fabian@gmail.com";
-    const password = "admin";
     const boton = $('#check');
     const mailInput = $('#mail');
     const passInput = $('#pass');
+    const errorDiv = $('#error-container');
 
-    //funcion del btn mostrar contraseña
+    // Función para mostrar/ocultar contraseña
     boton.click(function () {
-
-        if (passInput.attr('type') === "password") {
-            passInput.attr('type', 'text');
-        } else {
-            passInput.attr('type', 'password');
-        }
+        const type = passInput.attr('type') === "password" ? "text" : "password";
+        passInput.attr('type', type);
     });
 
-    //validacion de credenciales
-    $('#login').submit(function (event) {
-        //detiene la recarga de pagina que provoca el input submit
-        event.preventDefault();
-        //busca capturar la informacion al hacer el click
-        const mailValue = mailInput.val();
-        const passValue = passInput.val();
-        const errorDiv = $('#error-container')
+    
+    // Validación de credenciales
+$('#login').submit(function (event) {
+    event.preventDefault();
 
-        if (mailValue === username && passValue === password) {
+    const mailValue = mailInput.val();
+    const passValue = passInput.val();
+
+    // 1. Obtener la LISTA de usuarios
+    const datosGuardados = localStorage.getItem('usuarios');
+
+    if (datosGuardados) {
+        // 2. Convertir a Array de objetos
+        const listaUsuarios = JSON.parse(datosGuardados);
+
+        // 3. BUSCAR si existe un usuario que coincida con mail y password
+        // El método .find() devuelve el objeto si lo encuentra, o undefined si no.
+        const usuarioEncontrado = listaUsuarios.find(u => u.email === mailValue && u.password === passValue);
+
+        if (usuarioEncontrado) {
+            // Éxito: Guardamos el nombre en el session para saludarlo en el menú
+            sessionStorage.setItem('usuarioActivo', usuarioEncontrado.nombre);
             window.location.replace('menu.html');
         } else {
-            const alerta = `
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <strong>Error:</strong> Credenciales incorrectas.
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            `;
-
-            errorDiv.html(alerta);
-            passInput.val('');
+            mostrarError();
         }
-    });
-})
+    } else {
+        mostrarError();
+    }
+});
 
-
-/*logica con jquery*/
+    function mostrarError() {
+        const alerta = `
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>Error:</strong> Credenciales incorrectas.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        `;
+        errorDiv.html(alerta);
+        passInput.val('');
+    }
+});
 
