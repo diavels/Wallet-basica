@@ -6,151 +6,192 @@
 - mensaje cambia a monto enviado o nuevo saldo*/
 
 //logica para agregar los contactos nuevos
+$(document).ready(function () {
 
-const inputContacto = document.getElementById('nombreContacto');
-const inpuntRut = document.getElementById ('rutContacto')
-const inputBanco = document.getElementById ('nombreBanco')
-const inputMail = document.getElementById('idContacto');
-const inputAlias = document.getElementById('aliasContacto');
-const btnSave = document.getElementById('subContacto');
+    // 1. SELECTORES
+    const inputContacto = $('#nombreContacto');
+    const inpuntRut = $('#rutContacto');
+    const inputBanco = $('#nombreBanco');
+    const inputMail = $('#idContacto');
+    const inputAlias = $('#aliasContacto');
+    const btnSave = $('#subContacto');
+    const inputBusqueda = $('#searchContact');
 
-btnSave.addEventListener('click', function (e) {
-    e.preventDefault();
+    // 2. FILTRADO (Se mantiene igual, funciona bien)
+    inputBusqueda.on('keyup', function () {
+        const valorBusqueda = $(this).val().toLowerCase();
+        $('#listaContactos label').each(function () {
+            const textoContacto = $(this).text().toLowerCase();
+            if (textoContacto.indexOf(valorBusqueda) > -1) {
+                $(this).addClass('d-flex').show();
+            } else {
+                $(this).removeClass('d-flex').hide();
+            }
+        });
+    });
 
-    const nuevoContacto = {
-        nombre: inputContacto.value,
-        rut: inpuntRut.value,
-        banco: inputBanco.value,
-        mail: inputMail.value,
-        alias: inputAlias.value,
-    };
+    // 3. EVENTO GUARDAR CONTACTO
+    btnSave.on('click', function (e) {
+        e.preventDefault();
 
-    let contactos = JSON.parse(localStorage.getItem('contactosGuardados')) || []
+        // Validación básica (Inconsistencia prevenida: no guardar vacíos)
+        if (inputContacto.val().trim() === "") {
+            alert("El nombre es obligatorio");
+            return;
+        }
 
-    contactos.push(nuevoContacto);
-
-    localStorage.setItem('contactosGuardados', JSON.stringify(contactos));
-
-    inputContacto.value = '';
-    inpuntRut.value = '';
-    inputBanco.value = '';
-    inputMail.value = '';
-    inputAlias.value = '';
-
-    // 7. Actualizar la lista en pantalla inmediatamente
-    mostrarContactos();
-
-    
-});
-//logica para mostrar los contactos nuevos
-function mostrarContactos() {
-    const listaContenedor = document.getElementById('listaContactos');
-    const contactos = JSON.parse(localStorage.getItem('contactosGuardados')) || [];
-
-    listaContenedor.innerHTML = '';
-
-    if (contactos.length === 0) {
-        listaContenedor.innerHTML = '<p class="text-center text-muted p-4">Aún no tienes contactos guardados.</p>';
-        return;
-    }
-
-    contactos.forEach(contacto => {
-        const inicial = contacto.nombre.charAt(0).toUpperCase();
-        
-        // Crear el elemento manualmente para asignar el evento click de forma segura
-        const label = document.createElement('label');
-        label.className = "list-group-item d-flex align-items-center justify-content-between p-3";
-        label.style.cursor = "pointer";
-        
-        label.innerHTML = `
-            <div class="d-flex align-items-center">
-                <div class="form-check me-3">
-                    <input class="form-check-input" type="radio" name="contactoParaTransferir">
-                </div>
-                <div class="rounded-circle bg-light d-flex align-items-center justify-content-center me-3 border" style="width: 40px; height: 40px; font-weight: bold; color: #0d6efd;">
-                    ${inicial}
-                </div>
-                <div>
-                    <h6 class="mb-0 fw-bold">${contacto.nombre}</h6>
-                    <small class="text-muted">${contacto.alias || contacto.mail}</small>
-                </div>
-            </div>
-            <i class="bi bi-chevron-right text-secondary small"></i>
-        `;
-
-        // AL HACER CLIC: Se prepara el modal con ESTE contacto
-        label.onclick = () => {
-            prepararTransferencia(contacto);
-            const modalTransf = new bootstrap.Modal(document.getElementById('modalTransf'));
-            modalTransf.show();
+        const nuevoContacto = {
+            nombre: inputContacto.val(),
+            rut: inpuntRut.val(),
+            banco: inputBanco.val(),
+            mail: inputMail.val(),
+            alias: inputAlias.val(),
         };
 
-        listaContenedor.appendChild(label);
-    });
-}
+        let contactos = JSON.parse(localStorage.getItem('contactosGuardados')) || [];
+        contactos.push(nuevoContacto);
+        localStorage.setItem('contactosGuardados', JSON.stringify(contactos));
 
-//logica de enviar dinero
+        // Limpiar campos
+        inputContacto.val('');
+        inpuntRut.val('');
+        inputBanco.val('');
+        inputMail.val('');
+        inputAlias.val('');
+        inputBusqueda.val(''); // Limpiamos buscador para ver el nuevo contacto
 
-// Función para abrir el modal con los datos del contacto seleccionado
-function prepararTransferencia(contacto) {
-    // Rellenamos el modal con los datos del objeto 'contacto'
-    document.getElementById('infoNombre').value = contacto.nombre;
-    document.getElementById('infoRut').value = contacto.rut || 'No registrado';
-    document.getElementById('infoBanco').value = contacto.banco || 'No registrado';
-}
+        mostrarContactos();
 
-document.getElementById('btnConfirmarTransf').addEventListener('click', function() {
-    const montoInput = document.getElementById('montoTransferir');
-    const monto = parseFloat(montoInput.value);
-    
-    let walletData = JSON.parse(localStorage.getItem('alekWalletData')) || { saldo: 0, movimientos: [] };
-    const errorMsg = document.getElementById('errorMonto');
-
-    // Validaciones
-    if (isNaN(monto) || monto <= 0) {
-        alert("Ingresa un monto válido");
-        return;
-    }
-
-    if (monto > walletData.saldo) {
-        errorMsg.classList.remove('d-none');
-        montoInput.classList.add('is-invalid');
-        return;
-    }
-
-    // Ejecutar Transacción
-    walletData.saldo -= monto;
-    walletData.movimientos.push({
-        tipo: 'Transferencia Enviada',
-        destinatario: document.getElementById('infoNombre').value,
-        monto: monto,
-        fecha: new Date().toLocaleString()
+        // Cerrar el offcanvas automáticamente
+        const offcanvas = bootstrap.Offcanvas.getInstance($('#offcanvasContacto')[0]);
+        if (offcanvas) offcanvas.hide();
     });
 
-    localStorage.setItem('alekWalletData', JSON.stringify(walletData));
+    // 4. MOSTRAR CONTACTOS
+    function mostrarContactos() {
+        const listaContenedor = $('#listaContactos');
+        const contactos = JSON.parse(localStorage.getItem('contactosGuardados')) || [];
 
-    // Feedback visual (Cerrar modal actual y mostrar el de redirección/éxito)
-    bootstrap.Modal.getInstance(document.getElementById('modalTransf')).hide();
-    
-    const modalRedir = new bootstrap.Modal(document.getElementById('modalRedireccion'));
-    modalRedir.show();
+        listaContenedor.empty();
 
-    // Simular redirección al Home después de 2 segundos
-    setTimeout(() => {
-        window.location.href = '/menu.html';
-    }, 2000);
-});
+        if (contactos.length === 0) {
+            listaContenedor.append('<p class="text-center text-muted p-4">Aún no tienes contactos guardados.</p>');
+            return;
+        }
 
-//muestra los contactos
-document.addEventListener('DOMContentLoaded', mostrarContactos);
+        contactos.forEach((contacto, index) => {
+            const inicial = contacto.nombre.charAt(0).toUpperCase();
 
-// Detectar cuando cualquier modal de la página se oculta
-document.addEventListener('hidden.bs.modal', function () {
-    // Elimina manualmente los backdrops sobrantes
-    const backdrops = document.querySelectorAll('.modal-backdrop');
-    backdrops.forEach(b => b.remove());
+           const item = $(`
+    <label class="list-group-item d-flex align-items-center justify-content-between p-3 mb-2 border-0 shadow-sm contacto-card" 
+           style="cursor: pointer; background-color: #f8f9fa; transition: all 0.3s ease; border-radius: 12px;">
+        
+        <div class="d-flex align-items-center">
+            <div class="form-check me-3">
+                <input class="form-check-input" type="radio" name="contactoParaTransferir">
+            </div>
+            
+            <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center me-3 shadow-sm" 
+                 style="width: 45px; height: 45px; font-weight: bold; color: white;">
+                ${inicial}
+            </div>
+            
+            <div>
+                <h6 class="mb-0 fw-bold text-dark">${contacto.nombre}</h6>
+                <small class="text-secondary">${contacto.alias || contacto.mail}</small>
+            </div>
+        </div>
 
-    // Devuelve el scroll al cuerpo de la página
-    document.body.style.overflow = 'auto';
-    document.body.classList.remove('modal-open');
+        <button class="btn btn-danger btn-sm rounded-circle shadow-sm btn-eliminar" 
+                style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; z-index: 10;" 
+                title="Eliminar contacto">
+            <i class="bi bi-trash3-fill" style="font-size: 0.9rem;"> - </i>
+        </button>
+    </label>
+`);
+
+            item.on('click', function () {
+                prepararTransferencia(contacto);
+                const modalTransf = new bootstrap.Modal($('#modalTransf')[0]);
+                modalTransf.show();
+            });
+
+            item.find('.btn-eliminar').on('click', function (e) {
+                e.stopPropagation();
+                if (confirm(`¿Estás seguro de que deseas eliminar a ${contacto.nombre}?`)) {
+                    eliminarContacto(index);
+                }
+            });
+
+            listaContenedor.append(item);
+        });
+
+        // Corregir Inconsistencia 1: Aplicar el filtro si había algo escrito
+        inputBusqueda.trigger('keyup');
+    }
+
+    function eliminarContacto(index) {
+        let contactos = JSON.parse(localStorage.getItem('contactosGuardados')) || [];
+        contactos.splice(index, 1);
+        localStorage.setItem('contactosGuardados', JSON.stringify(contactos));
+        mostrarContactos();
+    }
+
+    function prepararTransferencia(contacto) {
+        $('#infoNombre').val(contacto.nombre);
+        $('#infoRut').val(contacto.rut || 'No registrado');
+        $('#infoBanco').val(contacto.banco || 'No registrado');
+    }
+
+    // 5. CONFIRMAR TRANSFERENCIA
+    $('#btnConfirmarTransf').on('click', function () {
+        const montoInput = $('#montoTransferir');
+        const monto = parseFloat(montoInput.val());
+        const nombreDestinatario = $('#infoNombre').val(); // Capturamos el nombre
+
+        let walletData = JSON.parse(localStorage.getItem('alekWalletData')) || { saldo: 0, movimientos: [] };
+
+        // Validaciones
+        if (isNaN(monto) || monto <= 0) {
+            alert("Ingresa un monto válido");
+            return;
+        }
+        if (monto > walletData.saldo) {
+            $('#errorMonto').removeClass('d-none');
+            montoInput.addClass('is-invalid');
+            return;
+        }
+
+        // --- PROCESO DE DINERO ---
+        walletData.saldo -= monto;
+        walletData.movimientos.push({
+            tipo: 'Transferencia Enviada',
+            destinatario: nombreDestinatario,
+            monto: monto,
+            fecha: new Date().toLocaleString()
+        });
+        localStorage.setItem('alekWalletData', JSON.stringify(walletData));
+
+        // --- PREPARAR MODAL DE ÉXITO ---
+        // Llenamos la info en el modal de éxito
+        $('#exitoNombre').text(nombreDestinatario);
+        $('#exitoMonto').text(`- $${monto.toLocaleString()}`); // Aquí sale en negativo
+
+        // Cerrar modal de confirmación
+        const modalConfirmacion = bootstrap.Modal.getInstance($('#modalTransf')[0]);
+        modalConfirmacion.hide();
+
+        // Mostrar modal de éxito
+        const modalExito = new bootstrap.Modal($('#modalExito')[0]);
+        modalExito.show();
+
+    });
+
+    // 6. LIMPIEZA GLOBAL (Punto 5 del usuario)
+    $(document).on('hidden.bs.modal', function () {
+        $('.modal-backdrop').remove();
+        $('body').css('overflow', 'auto').removeClass('modal-open');
+    });
+
+    mostrarContactos();
 });

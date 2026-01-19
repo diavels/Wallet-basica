@@ -1,8 +1,52 @@
 body .index {
     padding: 20px;
+    background-color: #f0f2f5; /* Un fondo gris suave para que resalte la sombra */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100 vh;
 }
+.card {
+    transition: transform 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-5px); /* Efecto sutil de levitación al pasar el mouse */
+  }
 
 .container {
     max-width: 400px;
     margin: 0 auto;
+}
+
+.login-card {
+    max-width: 400px;
+    width: 100%;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+/* Podemos personalizar incluso los inputs cuando se seleccionan */
+.login-card .form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, .25);
+}
+/* Estilo base para diferenciar del fondo blanco */
+.contacto-card {
+    background-color: #ececec !important; /* Un gris claro sutil */
+    border: 1px solid #dee2e6 !important;
+}
+
+/* Efecto al pasar el ratón */
+.contacto-card:hover {
+    background-color: #343a40 !important; /* Gris oscuro (Dark de Bootstrap) */
+    transform: translateY(-2px); /* Pequeño salto hacia arriba */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2) !important;
+}
+
+/* Cambiar el color del texto a blanco solo cuando pasamos el mouse */
+.contacto-card:hover h6 {
+    color: white !important;
+}
+.contacto-card:hover small {
+    color: #adadad !important;
 }

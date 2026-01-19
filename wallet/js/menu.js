@@ -1,84 +1,38 @@
-//logica de menu principal
+$(document).ready(function () {
+    // 1. INSTANCIAR MODAL Y ELEMENTOS (Una sola vez)
+    const modalElement = $('#modalRedireccion')[0];
+    const modal = modalElement ? new bootstrap.Modal(modalElement) : null;
+    const rediG = $('#redirigiendo');
 
-/*agregar evento a los botones principales, 
-al hacer click, debe aparecer una leyenda diciendo:
-"redirigiendo a x" */
-const btnDeposito = document.getElementById('deposit');
-const btnMenu = document.getElementById('home');
-const btnTransaccion = document.getElementById('transactions');
-const btnEvDinero = document.getElementById('sendmoney');
+    // 2. FUNCIÓN PARA MOSTRAR SALDO
+    function mostrarSaldo() {
+        const datos = JSON.parse(localStorage.getItem('alekWalletData'));
+        const displaySaldo = $('#saldo'); // Selector jQuery
 
-
-//funcion para boton de rederigir
-btnDeposito.addEventListener('click', function redirigir(event) {
-    event.preventDefault();
-
-    const rediG = document.getElementById('redirigiendo');
-    rediG.textContent = "Redirigiendo a depositar..";
-
-
-    const modal = new bootstrap.Modal(document.getElementById('modalRedireccion'));
-    modal.show();
-
-    setTimeout(function () {
-        window.location.href = 'deposit.html';
-    }, 1000);
-});
-
-btnMenu.addEventListener('click', function redirigir(event) {
-event.preventDefault();
-    const rediG = document.getElementById('redirigiendo');
-    rediG.textContent = "Redirigiendo a Menu Principal..";
-
-    const modal = new bootstrap.Modal(document.getElementById('modalRedireccion'));
-    modal.show();
-
-    setTimeout(function () {
-        window.location.href = 'menu.html';
-    }, 1000);
-});
-
-btnTransaccion.addEventListener('click', function redirigir(event) {
-    event.preventDefault();
-     const rediG = document.getElementById('redirigiendo');
-    rediG.textContent = "Redirigiendo a Transacciones..";
-
-    const modal = new bootstrap.Modal(document.getElementById('modalRedireccion'));
-    modal.show();
-
-    setTimeout(function () {
-        window.location.href = 'transactions.html';
-    }, 1000);
-});
-
-btnEvDinero.addEventListener('click', function redirigir(event) {
-event.preventDefault();
-     const rediG = document.getElementById('redirigiendo');
-    rediG.textContent = "Redirigiendo a Enviar Dinero..";
-
-    const modal = new bootstrap.Modal(document.getElementById('modalRedireccion'));
-    modal.show();
-
-    setTimeout(function () {
-        window.location.href = 'sendmoney.html';
-    }, 1000);
-});
-
-// PARA MOSTRAR EL SALDO
-// llama a la lista, luego recata el valor del saldo asociandolo a un id
-
-function mostrarSaldo() {
-    //llama la lista
-    const datos = JSON.parse(localStorage.getItem('alekWalletData'));
-    //asocia el id del saldo para mostrarlo dsp
-    const displaySaldo = document.getElementById('saldo'); 
-    
-    //condicional en caso de que no tenga saldo
-    if (datos && displaySaldo) {
-        displaySaldo.textContent = `$${datos.saldo.toLocaleString()}`;
-    } else if (displaySaldo) {
-        displaySaldo.textContent = "$0";
+        if (datos && datos.saldo !== undefined) {
+            displaySaldo.text(`$${datos.saldo.toLocaleString()}`);
+        } else {
+            displaySaldo.text("$0");
+        }
     }
-}
-//sive para que el codigo se active dsp de que el dom este listo.
-document.addEventListener('DOMContentLoaded', mostrarSaldo);
+
+    // EJECUTAR AL CARGAR
+    mostrarSaldo();
+
+    // 3. LÓGICA DE REDIRECCIÓN UNIFICADA
+    // Seleccionamos todos los botones que tengan un ID de navegación
+    $('#deposit, #home, #transactions, #sendmoney').click(function (event) {
+        event.preventDefault();
+        
+        const destino = $(this).attr('href'); // Obtiene el destino del atributo href del HTML
+        const textoBotón = $(this).text().trim(); // Obtiene el nombre del botón
+
+        rediG.text(`Redirigiendo a ${textoBotón}...`);
+        
+        if (modal) modal.show();
+
+        setTimeout(function () {
+            window.location.href = destino;
+        }, 1000);
+    });
+});

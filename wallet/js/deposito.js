@@ -1,61 +1,57 @@
-const btnGuardar = document.getElementById('guardarDinero');
-const input = document.getElementById('inDinero');
+$(document).ready(function () {
+    // Selectores de jQuery
+    const btnGuardar = $('#guardarDinero');
+    const input = $('#inDinero');
 
-//logica de deposito
+    btnGuardar.on('click', function (event) {
+        event.preventDefault();
 
-/* agregar evento al btn realizar deposito
-- actualizar el saldo con el monto depositado */
+        // Instancia del modal (usando el elemento nativo [0])
+        const modalElement = $('#modalResultado')[0];
+        const modal = new bootstrap.Modal(modalElement);
 
-// creamos una funcion para capturar el valor ingresado + fecha 
-/*la funcion de click debe contener
-- prevent default para evitar recarga
-- condicional para errores con valores negativos
-- creacion de localstorage
-- funcion de suma+ actualizacion de valor*/
+        // Obtener valor numérico con jQuery
+        const monto = parseFloat(input.val());
 
-btnGuardar.addEventListener('click', function (event) {
-    event.preventDefault();
-    const modal = new bootstrap.Modal(document.getElementById('modalResultado'));
-    //valores sean numericos y no se comporten como text
-    const monto = parseFloat(input.value);
+        // Validación
+        if (isNaN(monto) || monto <= 0) {
+            alert("Monto no válido para transacción");
+            input.val(''); // Limpiar input si es inválido
+            return;
+        }
 
-    if (monto <= 0) {
-        alert("monto no valido para transaccion");
-        return;
-    }
-    // 2. Obtener datos actuales de localStorage o crear nuevos si no existen
-    let datos = JSON.parse(localStorage.getItem('alekWalletData')) || {
-        saldo: 0,
-        movimientos: []
-    };
+        // 2. Obtener datos actuales de localStorage o inicializar
+        let datos = JSON.parse(localStorage.getItem('alekWalletData')) || {
+            saldo: 0,
+            movimientos: []
+        };
 
-    // 3. Actualizar el saldo y el historial
-    datos.saldo += monto;
+        // 3. Actualizar el saldo y el historial
+        datos.saldo += monto;
 
-    const nuevoMovimiento = {
-        tipo: 'Depósito',
-        monto: monto,
-        fecha: new Date().toLocaleString(),
-    };
+        const nuevoMovimiento = {
+            tipo: 'Depósito',
+            monto: monto,
+            fecha: new Date().toLocaleString(),
+        };
 
-    //funcio nde agregar el valor a json
-    datos.movimientos.push(nuevoMovimiento);
+        datos.movimientos.push(nuevoMovimiento);
 
-    // 4. Guardar de nuevo en localStorage
-    localStorage.setItem('alekWalletData', JSON.stringify(datos));
+        // 4. Guardar en localStorage
+        localStorage.setItem('alekWalletData', JSON.stringify(datos));
 
-    //Feedback visual con modal
-    document.getElementById('mensajeModal').innerText = `Depósito de $${monto} realizado correctamente.`;
-    document.getElementById('nuevoSaldoModal').innerText = `Tu nuevo saldo es: $${datos.saldo}`;
+        // Feedback visual usando .text() de jQuery
+        $('#mensajeModal').text(`Depósito de $${monto.toLocaleString()} realizado correctamente.`);
+        $('#nuevoSaldoModal').text(`Tu nuevo saldo es: $${datos.saldo.toLocaleString()}`);
 
-    modal.show();
-    // Limpiar el input
-    inputMonto.value = '';
-    
+        // Mostrar Modal
+        modal.show();
+
+        // Limpiar el input con jQuery
+        input.val('');
+    });
 });
 
-//mostrar el saldo en pantalla de menu
-con
 
 
 

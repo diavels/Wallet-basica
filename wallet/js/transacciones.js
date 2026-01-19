@@ -1,23 +1,31 @@
-function cargarTransacciones() {
-    const tabla = document.getElementById('tablaMovimientos');
-    // Obtenemos los datos o un objeto vacío si no hay nada
-    const walletData = JSON.parse(localStorage.getItem('alekWalletData')) || { movimientos: [] };
+$(document).ready(function() {
+    // 1. Seleccionamos la tabla 
+    const tabla = $('#tablaMovimientos');
+    
+    // 2. Obtenemos los datos del localStorage
+    const datosGuardados = localStorage.getItem('alekWalletData');
+    const walletData = JSON.parse(datosGuardados) || { movimientos: [] };
     const movimientos = walletData.movimientos;
 
-    tabla.innerHTML = '';
+    // 3. Limpiamos la tabla antes de llenarla
+    tabla.empty();
 
+    // 4. if para revisar si no hay movimientod y mostrar mensaje
     if (movimientos.length === 0) {
-        tabla.innerHTML = '<tr><td colspan="4" class="text-center p-4 text-muted">No hay registros aún.</td></tr>';
-        return;
+        tabla.append('<tr><td colspan="4" class="text-center p-4 text-muted">No hay registros aún.</td></tr>');
+        return; 
     }
 
-    // Recorremos los movimientos (usamos reverse para ver el más reciente primero)
-    movimientos.reverse().forEach(mov => {
-        // Determinamos el color y el símbolo según el tipo
+    // 5. Recorremos los movimientos
+    // Usamos .reverse() para mostrar del mas reciente
+    movimientos.reverse().forEach(function(mov) {
+        
+        // Determinamos si es entrada o salida de dinero
         const esIngreso = mov.tipo === 'Depósito' || mov.tipo === 'Depósito Rápido';
         const colorClase = esIngreso ? 'text-success' : 'text-danger';
         const simbolo = esIngreso ? '+' : '-';
 
+        // Creamos la fila
         const fila = `
             <tr>
                 <td class="ps-4 small text-muted">${mov.fecha}</td>
@@ -32,8 +40,8 @@ function cargarTransacciones() {
                 </td>
             </tr>
         `;
-        tabla.insertAdjacentHTML('beforeend', fila);
+
+        // 6. Agregamos la fila a la tabla
+        tabla.append(fila);
     });
-}
-//muestra los movimientos
-document.addEventListener('DOMContentLoaded', cargarTransacciones);
+});
